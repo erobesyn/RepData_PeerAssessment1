@@ -1,10 +1,11 @@
 MY SCRIPT FOR PA1 REPORT
-========================================================
+=======================================================
 
 # A Loading and preprocessing the data
 
 ## 1 Load and inspect the data
 
+Load the data from the csv file and look at the first and last rows and the data structure.
 
 ```r
 setwd("C:/Users/Robesyn/RepData_PeerAssessment1/activity")
@@ -69,22 +70,11 @@ str(act)
 Turn dates into date class.
 
 ```r
-str(act)
-```
-
-```
-## 'data.frame':	17568 obs. of  3 variables:
-##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
-##  $ date    : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
-```
-
-```r
 act$date <- as.Date(act$date)
 ```
 
 
-Reorder the columns.
+Reorder the columns, to have the date first, then the interval within the date, and then the number of steps for the corresponding date-time interval.
 
 ```r
 act <- act[, c(2, 3, 1)]
@@ -102,7 +92,7 @@ head(act)
 ```
 
 
-Create wide dataset for the analysis per 5-min interval (gcook p367)
+Create a wide dataset for the analysis per 5-min interval.
 
 ```r
 install.packages("reshape2")
@@ -132,12 +122,7 @@ actwide <- dcast(act, act$date ~ act$interval, value.var = "steps")
 str(actwide)
 ```
 
-Actwide is dataframe of 61 rows (days) and 288 other columns (5-min intervals in one day)
-
-
-[Convert dataframe in 2-col df with one for date with fractional values (gcook p 370)
-(cave I do not have time series object yet)
-zoo package to convert to time series object ?? ]
+"Actwide" is a dataframe of 61 rows (days of activity measurement) and 288 other columns (the consecutive 5-min intervals in one day).
 
 # B What is mean total number of steps taken per day?
 
@@ -181,79 +166,41 @@ hist(stepsbyday, col = "red", main = "Histogram of steps per day", ylab = "Frequ
 ![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
 
 
-
-
 ## 2 Calculate mean and median total number of steps per day
 
 
 ```r
 meanbyday <- mean(stepsbyday, na.rm = T)
+meanbyday <- as.integer(meanbyday)
 medianbyday <- median(stepsbyday, na.rm = T)
 ```
 
 
-The mean total number per day is 1.0766 &times; 10<sup>4</sup> and the median total number per day is 10765.
-They are only 1 step per day different from each other, indicating hardly any skew in the data.
-
-Note: For some reason the correct mean and median calculated by the 5-number summary differs very slightly from the command summary(stepsbyday). Summary() finds the maximum value at 21190 while the real maximum value is 21194.  (rounding effect?)
-
-
-[Store MEAN total steps per day and make ts of this var]  ??? NOT NEEDED ???
-
+The mean total number per day is 10766 and the median total number per day is 10765. They are only 1 step per day different from each other, indicating hardly any skew in the data.
 
 # C What is the average daily activity pattern?
 
-plot(act$date, act$steps, type="l")
+First plot the raw data per day.  Each dot is the number of steps in a 5 minutes interval on a specific day. 
+
+
+```r
+plot(act$date, act$steps, pch = 19, cex = 1e-04, col = "blue")
+```
+
+![plot of chunk raw data](figure/raw_data.png) 
+
 
 ## 1 Make time series plot with average number of steps per 5-min interval, averaged across all days
-Do the same as above but with MEAN per 5-min interval
 
 
 ```r
-stepsperinterval <- colSums(actwide[, -1], na.rm = T)
-head(stepsperinterval)
-```
-
-```
-##   0   5  10  15  20  25 
-##  91  18   7   8   4 111
-```
-
-```r
-tail(stepsperinterval)
-```
-
-```
-## 2330 2335 2340 2345 2350 2355 
-##  138  249  175   34   12   57
-```
-
-
-First sum over all 61 days, then divide by 61 to get average.
-
-```r
-max(stepsperinterval)
-```
-
-```
-## [1] 10927
-```
-
-```r
-max(stepsperinterval)/61
-```
-
-```
-## [1] 179.1
-```
-
-```r
-
-plot(stepsperinterval/61, type = "l", main = "Average number (across all days) of steps per 5-min interval", 
+meanperinterval <- sapply(actwide[, -1], mean, na.rm = T)
+plot.ts(meanperinterval, type = "l", main = "Average number (across all days) of steps per 5-min interval", 
     ylab = "Number of steps", xlab = "5-min intervals in a day", col = "red")
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
+
 
 
 ## 2 Which 5-min interval, averaged across all days, contains most steps?
@@ -264,7 +211,18 @@ plot(stepsperinterval/61, type = "l", main = "Average number (across all days) o
 
 ```r
 stepsperinterval <- as.data.frame(stepsperinterval)
+```
+
+```
+## Error: object 'stepsperinterval' not found
+```
+
+```r
 stepsperinterval/61
+```
+
+```
+## Error: object 'stepsperinterval' not found
 ```
 
 
@@ -274,16 +232,13 @@ str(stepsperinterval/61)
 ```
 
 ```
-## 'data.frame':	288 obs. of  1 variable:
-##  $ stepsperinterval: num  1.4918 0.2951 0.1148 0.1311 0.0656 ...
+## Error: object 'stepsperinterval' not found
 ```
 
 There are 288 5-min intervals in a day
 
 Look for interval with 179.13 steps
 Answer: interval 835! (cumulative nr of 5-min intervals) 
-WRONG because we are looking at averages across days...
-
 
 # D Imputing missing values
 
@@ -298,19 +253,19 @@ narows <- sum(is.na(act))
 From the 17568 in the dataset, 2304 contain one or more missing values.
 
 ## 2 Devise strategy for filling missing values (e.g. mean for day, mean for 5-min interval, ...)
+Replace the NA values by mean per day, from section B.
+
 ## 3 Create new dataset with missing data filled in.
+
 ## 4 Make histogram with total nr of steps per day. Calculate mean and median total steps per day. Do they differ from part B (without imputing missing values). What is impact of imputing missing data on the estimates?
 
 
 # E Are there differences in activity patterns between weekdays and weekends?
 
 ## 1 Create factor 'part of week' (weekday or weekend)
+
 ## 2 Make panel plot of time series with average number of steps per 5-min interval, averaged across all weekdays OR weekenddays.
 
-See gcook p354. ddply with transform
-
-Then ggplot2 with gcook p370
-Or zoo rcook 
 
 
 ```r
@@ -384,5 +339,4 @@ head(datets)
 ## 2012-10-01 2012-10-01   20     <NA> 
 ## 2012-10-01 2012-10-01   25     <NA>
 ```
-
 

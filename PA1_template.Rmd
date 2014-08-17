@@ -1,10 +1,11 @@
 MY SCRIPT FOR PA1 REPORT
-========================================================
+=======================================================
 
 # A Loading and preprocessing the data
 
 ## 1 Load and inspect the data
 
+Load the data from the csv file and look at the first and last rows and the data structure.
 ```{r}
 setwd("C:/Users/Robesyn/RepData_PeerAssessment1/activity")
 dir()
@@ -19,17 +20,16 @@ str(act)
 
 Turn dates into date class.
 ```{r}
-str(act)
 act$date<-as.Date(act$date)
 ```
 
-Reorder the columns.
+Reorder the columns, to have the date first, then the interval within the date, and then the number of steps for the corresponding date-time interval.
 ```{r}
 act<-act[, c(2,3,1)]
 head(act)
 ```
 
-Create wide dataset for the analysis per 5-min interval (gcook p367)
+Create a wide dataset for the analysis per 5-min interval.
 ```{r}
 install.packages("reshape2")
 library("reshape2", lib.loc="C:/Users/Robesyn/Documents/R/win-library/3.0")
@@ -39,12 +39,7 @@ library("reshape2", lib.loc="C:/Users/Robesyn/Documents/R/win-library/3.0")
 actwide<-dcast(act, act$date~act$interval, value.var="steps")
 str(actwide)
 ```
-Actwide is dataframe of 61 rows (days) and 288 other columns (5-min intervals in one day)
-
-
-[Convert dataframe in 2-col df with one for date with fractional values (gcook p 370)
-(cave I do not have time series object yet)
-zoo package to convert to time series object ?? ]
+"Actwide" is a dataframe of 61 rows (days of activity measurement) and 288 other columns (the consecutive 5-min intervals in one day).
 
 # B What is mean total number of steps taken per day?
 
@@ -64,45 +59,31 @@ max
 hist(stepsbyday, col="red", main="Histogram of steps per day", ylab="Frequency", xlab="Number of steps per day", breaks=20, xlim=c(0,max+3000))
 ``` 
 
-
-
 ## 2 Calculate mean and median total number of steps per day
 
 ```{r}
 meanbyday<-mean(stepsbyday,na.rm=T)
+meanbyday<-as.integer(meanbyday)
 medianbyday<-median(stepsbyday, na.rm=T)
 ```
 
-The mean total number per day is `r meanbyday` and the median total number per day is `r medianbyday`.
-They are only 1 step per day different from each other, indicating hardly any skew in the data.
-
-Note: For some reason the correct mean and median calculated by the 5-number summary differs very slightly from the command summary(stepsbyday). Summary() finds the maximum value at 21190 while the real maximum value is 21194.  (rounding effect?)
-
-
-[Store MEAN total steps per day and make ts of this var]  ??? NOT NEEDED ???
-
+The mean total number per day is `r meanbyday` and the median total number per day is `r medianbyday`. They are only 1 step per day different from each other, indicating hardly any skew in the data.
 
 # C What is the average daily activity pattern?
 
-plot(act$date, act$steps, type="l")
+First plot the raw data per day.  Each dot is the number of steps in a 5 minutes interval on a specific day. 
+
+```{r raw data}
+plot(act$date, act$steps, pch=19, cex=0.0001, col="blue")
+```
 
 ## 1 Make time series plot with average number of steps per 5-min interval, averaged across all days
-Do the same as above but with MEAN per 5-min interval
 
 ```{r}
-stepsperinterval<-colSums(actwide[,-1],na.rm=T)
-head(stepsperinterval)
-tail(stepsperinterval)
-
-``` 
-
-First sum over all 61 days, then divide by 61 to get average.
-```{r, fig.width=7, fig.height=4}
-max(stepsperinterval)
-max(stepsperinterval)/61 
-
-plot(stepsperinterval/61, type="l", main="Average number (across all days) of steps per 5-min interval", ylab="Number of steps", xlab="5-min intervals in a day", col="red")
+meanperinterval<-sapply(actwide[,-1],mean, na.rm=T)
+plot.ts(meanperinterval,type = "l", main = "Average number (across all days) of steps per 5-min interval", ylab = "Number of steps", xlab = "5-min intervals in a day", col = "red")
 ```
+
 
 ## 2 Which 5-min interval, averaged across all days, contains most steps?
 
@@ -121,8 +102,6 @@ There are 288 5-min intervals in a day
 
 Look for interval with 179.13 steps
 Answer: interval 835! (cumulative nr of 5-min intervals) 
-WRONG because we are looking at averages across days...
-
 
 # D Imputing missing values
 
@@ -135,19 +114,19 @@ narows<-sum(is.na(act))
 From the `r rows` in the dataset, `r narows` contain one or more missing values.
 
 ## 2 Devise strategy for filling missing values (e.g. mean for day, mean for 5-min interval, ...)
+Replace the NA values by mean per day, from section B.
+
 ## 3 Create new dataset with missing data filled in.
+
 ## 4 Make histogram with total nr of steps per day. Calculate mean and median total steps per day. Do they differ from part B (without imputing missing values). What is impact of imputing missing data on the estimates?
 
 
 # E Are there differences in activity patterns between weekdays and weekends?
 
 ## 1 Create factor 'part of week' (weekday or weekend)
+
 ## 2 Make panel plot of time series with average number of steps per 5-min interval, averaged across all weekdays OR weekenddays.
 
-See gcook p354. ddply with transform
-
-Then ggplot2 with gcook p370
-Or zoo rcook 
 
 ```{r}
 install.packages("zoo")
@@ -157,4 +136,3 @@ datets<-zoo(act,act$date)
 str(datets)
 head(datets)
 ```
-
