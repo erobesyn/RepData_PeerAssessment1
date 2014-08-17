@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta http-equiv="x-ua-compatible" content="IE=9" >
 
-<title>MY RMD FILE FOR PA1</title>
+<title>MY SCRIPT FOR PA1 REPORT</title>
 
 <style type="text/css">
 body, td {
@@ -179,18 +179,17 @@ hljs.initHighlightingOnLoad();
 </head>
 
 <body>
-<h1>MY RMD FILE FOR PA1</h1>
+<h1>MY SCRIPT FOR PA1 REPORT</h1>
 
 <h1>A Loading and preprocessing the data</h1>
 
 <h2>1 Load and inspect the data</h2>
 
-<pre><code class="r">setwd(&quot;D:/PA1&quot;)
+<pre><code class="r">setwd(&quot;C:/Users/Robesyn/RepData_PeerAssessment1/activity&quot;)
 dir()
 </code></pre>
 
-<pre><code>## [1] &quot;activity.csv&quot;     &quot;figure&quot;           &quot;My RMD file.html&quot;
-## [4] &quot;My RMD file.md&quot;   &quot;My RMD file.Rmd&quot;
+<pre><code>## [1] &quot;activity.csv&quot;
 </code></pre>
 
 <pre><code class="r">act &lt;- read.csv(&quot;activity.csv&quot;)
@@ -269,14 +268,14 @@ head(act)
 <pre><code class="r">install.packages(&quot;reshape2&quot;)
 </code></pre>
 
-<pre><code>## Installing package into &#39;C:/Users/erobesyn/Documents/R/win-library/3.0&#39;
+<pre><code>## Installing package into &#39;C:/Users/Robesyn/Documents/R/win-library/3.0&#39;
 ## (as &#39;lib&#39; is unspecified)
 </code></pre>
 
 <pre><code>## Error: trying to use CRAN without setting a mirror
 </code></pre>
 
-<pre><code class="r">library(&quot;reshape2&quot;, lib.loc = &quot;C:/Users/erobesyn/Documents/R/win-library/3.0&quot;)
+<pre><code class="r">library(&quot;reshape2&quot;, lib.loc = &quot;C:/Users/Robesyn/Documents/R/win-library/3.0&quot;)
 </code></pre>
 
 <pre><code>## Warning: package &#39;reshape2&#39; was built under R version 3.0.3
@@ -436,17 +435,32 @@ narows &lt;- sum(is.na(act))
 <p>Then ggplot2 with gcook p370
 Or zoo rcook </p>
 
-<pre><code class="r">library(zoo)
+<pre><code class="r">install.packages(&quot;zoo&quot;)
 </code></pre>
 
-<pre><code>## Attaching package: &#39;zoo&#39;
+<pre><code>## Installing package into &#39;C:/Users/Robesyn/Documents/R/win-library/3.0&#39;
+## (as &#39;lib&#39; is unspecified)
+</code></pre>
+
+<pre><code>## Error: trying to use CRAN without setting a mirror
+</code></pre>
+
+<pre><code class="r">library(&quot;zoo&quot;, lib.loc = &quot;C:/Users/Robesyn/Documents/R/win-library/3.0&quot;)
+</code></pre>
+
+<pre><code>## Warning: package &#39;zoo&#39; was built under R version 3.0.3
+</code></pre>
+
+<pre><code>## 
+## Attaching package: &#39;zoo&#39;
 ## 
 ## The following objects are masked from &#39;package:base&#39;:
 ## 
-## as.Date, as.Date.numeric
+##     as.Date, as.Date.numeric
 </code></pre>
 
-<pre><code class="r">datets &lt;- zoo(act, act$date)
+<pre><code class="r">
+datets &lt;- zoo(act, act$date)
 </code></pre>
 
 <pre><code>## Warning: some methods for &quot;zoo&quot; objects do not work if the index entries

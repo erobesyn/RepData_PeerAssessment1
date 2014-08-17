@@ -1,4 +1,4 @@
-MY RMD FILE FOR PA1
+MY SCRIPT FOR PA1 REPORT
 ========================================================
 
 # A Loading and preprocessing the data
@@ -7,13 +7,12 @@ MY RMD FILE FOR PA1
 
 
 ```r
-setwd("D:/PA1")
+setwd("C:/Users/Robesyn/RepData_PeerAssessment1/activity")
 dir()
 ```
 
 ```
-## [1] "activity.csv"     "figure"           "My RMD file.html"
-## [4] "My RMD file.md"   "My RMD file.Rmd"
+## [1] "activity.csv"
 ```
 
 ```r
@@ -110,7 +109,7 @@ install.packages("reshape2")
 ```
 
 ```
-## Installing package into 'C:/Users/erobesyn/Documents/R/win-library/3.0'
+## Installing package into 'C:/Users/Robesyn/Documents/R/win-library/3.0'
 ## (as 'lib' is unspecified)
 ```
 
@@ -119,7 +118,7 @@ install.packages("reshape2")
 ```
 
 ```r
-library("reshape2", lib.loc = "C:/Users/erobesyn/Documents/R/win-library/3.0")
+library("reshape2", lib.loc = "C:/Users/Robesyn/Documents/R/win-library/3.0")
 ```
 
 ```
@@ -315,18 +314,37 @@ Or zoo rcook
 
 
 ```r
-library(zoo)
+install.packages("zoo")
 ```
 
 ```
+## Installing package into 'C:/Users/Robesyn/Documents/R/win-library/3.0'
+## (as 'lib' is unspecified)
+```
+
+```
+## Error: trying to use CRAN without setting a mirror
+```
+
+```r
+library("zoo", lib.loc = "C:/Users/Robesyn/Documents/R/win-library/3.0")
+```
+
+```
+## Warning: package 'zoo' was built under R version 3.0.3
+```
+
+```
+## 
 ## Attaching package: 'zoo'
 ## 
 ## The following objects are masked from 'package:base':
 ## 
-## as.Date, as.Date.numeric
+##     as.Date, as.Date.numeric
 ```
 
 ```r
+
 datets <- zoo(act, act$date)
 ```
 
