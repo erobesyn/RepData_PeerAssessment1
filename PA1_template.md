@@ -206,23 +206,33 @@ plot.ts(meanperinterval, type = "l", main = "Average number (across all days) of
 ## 2 Which 5-min interval, averaged across all days, contains most steps?
 
 
-10927 steps in 5 min - to divide by 61 days? =179 steps per 5 min
+```r
+stepsperinterval <- colSums(actwide[, -1], na.rm = T)
+head(stepsperinterval)
+```
+
+```
+##   0   5  10  15  20  25 
+##  91  18   7   8   4 111
+```
+
+```r
+tail(stepsperinterval)
+```
+
+```
+## 2330 2335 2340 2345 2350 2355 
+##  138  249  175   34   12   57
+```
+
+
+
+10927 steps in 5 min - divide by 61 days = 179 steps per 5 min
 
 
 ```r
 stepsperinterval <- as.data.frame(stepsperinterval)
-```
-
-```
-## Error: object 'stepsperinterval' not found
-```
-
-```r
 stepsperinterval/61
-```
-
-```
-## Error: object 'stepsperinterval' not found
 ```
 
 
@@ -232,12 +242,13 @@ str(stepsperinterval/61)
 ```
 
 ```
-## Error: object 'stepsperinterval' not found
+## 'data.frame':	288 obs. of  1 variable:
+##  $ stepsperinterval: num  1.4918 0.2951 0.1148 0.1311 0.0656 ...
 ```
 
 There are 288 5-min intervals in a day
 
-Look for interval with 179.13 steps
+Look for interval with 179.13 steps.
 Answer: interval 835! (cumulative nr of 5-min intervals) 
 
 # D Imputing missing values
