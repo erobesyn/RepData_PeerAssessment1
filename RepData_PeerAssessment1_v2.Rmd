@@ -77,7 +77,6 @@ plot(totalstepsbyday, type="l", col="red", main="Total steps per day")
 
 ## 2. Histogram of total steps per day.  
 ```{r histogram total steps by day,fig.width=7,fig.height=4}
-
 hist(sum, col="red", main="Histogram of steps per day", ylab="Frequency", xlab="Number of steps per day", breaks=20, xlim=c(0,max+3000))
 
 # store figure
