@@ -1,0 +1,22 @@
+{
+    "contents" : "",
+    "created" : 1434116161327.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "D2ADC6B",
+    "lastKnownWriteTime" : 7741240723082584096,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "caption" : "actimputed",
+        "contentUrl" : "content?title=actimputed&file=c39185a02f864c09b05394127a34111b.htm",
+        "displayedObservations" : "1000",
+        "displayedVariables" : 3,
+        "totalObservations" : "17568",
+        "variables" : "4"
+    },
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

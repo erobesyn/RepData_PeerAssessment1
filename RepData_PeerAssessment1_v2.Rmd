@@ -150,23 +150,34 @@ tail(incompleterows)
 
 ## 2 Devise strategy for filling missing values (e.g. mean for day, mean for 5-min interval, ...)
 
-### we chose to replace NA with mean for corresponding 5-minute interval  
-act<-mutate(act, imputed=steps)
-actimputed<- filter(act, steps==NA) %>% mutate(imputed=stepsbyinterval$mean)
-
-
-actimputed<-filter(act, steps==NA) %>% group_by(interval) %>% mutate(imputed=stepsbyinterval$mean)
-#%>% ifelse(steps=="NA", stepsbyinterval$mean, act$steps)
-
-
-actimputed<-act %>% group_by(interval) %>% filter(act, steps==NA) %>% mutate(imputed=mean(act$steps, rm.na=T))
+We choose to replace NA with mean for corresponding 5-minute interval  
 
 ## 3 Create new dataset with missing data filled in.
+actimputed<-transform(act, imputedsteps=ifelse(is.na(steps), ave(steps,interval, FUN=function(x) mean(x, na.rm=T)),steps))
+actimputed<-tbl_df(actimputed)
+View(actimputed)
+
+# actimputed<-act %>% group_by(interval) %>% mutate(imputed=replace(steps, is.na(steps), mean(steps, rm.na=T)))  # why does this not work ???
+
 
 ## 4 Make histogram with total nr of steps per day. Calculate mean and median total steps per day. Do they differ from part B (without imputing missing values). What is impact of imputing missing data on the estimates?
 
+totalimputedstepsbyday<-actimputed %>% group_by(date) %>% summarize(sum=sum(imputedsteps))
+totalimputedstepsbyday
+
+sumimputedsteps<-totalimputedstepsbyday$sum
+sumimputedsteps
+
+hist(sumimputedsteps, col="red", main="Histogram of steps, with imputation, per day", ylab="Frequency", xlab="Number of steps per day", breaks=20)
+
+# save figure
+png(file="histogram of total imputed steps by day.png")
+hist(sumimputedsteps, col="red", main="Histogram of steps, with imputation, per day", ylab="Frequency", xlab="Number of steps per day", breaks=20)
+dev.off()
 
 # E Are there differences in activity patterns between weekdays and weekends?
+
+Yes, they are different. This illustrates impact of imputation (and the method of imputation), which is important to be aware of.
 
 ## 1 Create factor 'part of week' (weekday or weekend)
 ## 2 Make panel plot of time series with average number of steps per 5-min interval, averaged across all weekdays OR weekenddays.
