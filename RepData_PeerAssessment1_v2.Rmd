@@ -11,8 +11,8 @@ REPRODUCIBLE RESEARCH, PROJECT 1 - DAILY ACTIVITY MEASUREMENTS
 # A Loading and preprocessing the data
 
 ## 1 Prepare, read and inspect
-Packages
-```{r packages installed, eval=F}
+Packages  , eval=F
+```{r packages installed} 
 ip <- as.data.frame(installed.packages()[,c(1,3:4)])
 rownames(ip) <- NULL
 ip <- ip[is.na(ip$Priority),1:2,drop=FALSE]
