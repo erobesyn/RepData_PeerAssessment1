@@ -16,7 +16,7 @@ REPRODUCIBLE RESEARCH, PROJECT 1 - DAILY ACTIVITY MEASUREMENTS
 
 ## 1 Prepare, read and inspect
 Packages
-```{r packages installed, echo=F}
+```{r packages installed, eval=F}
 ip <- as.data.frame(installed.packages()[,c(1,3:4)])
 rownames(ip) <- NULL
 ip <- ip[is.na(ip$Priority),1:2,drop=FALSE]
@@ -77,20 +77,20 @@ plot(totalstepsbyday, type="l", col="red", main="Total steps per day")
 
 ## 2. Histogram of total steps per day.  
 ```{r histogram total steps by day,fig.width=7,fig.height=4}
-hist(sum, col="red", main="Histogram of steps per day", ylab="Frequency", xlab="Number of steps per day", breaks=20, xlim=c(0,max+3000))
+hist(sum, col="red", main="Histogram of steps per day", ylab="Frequency", xlab="Number of steps per day", breaks=20)
 
 # store figure
 png(file="histogram of total steps by day.png")
-hist(sum, col="red", main="Histogram of steps per day", ylab="Frequency", xlab="Number of steps per day", breaks=20, xlim=c(0,max+3000))
+hist(sum, col="red", main="Histogram of steps per day", ylab="Frequency", xlab="Number of steps per day", breaks=20)
 dev.off()
 ``` 
 
 ## 3. mean and median of total steps by day
 ```{r mean and median of total steps by day}
 meanoftotalstepsbyday<-mean(totalstepsbyday$sum, na.rm=T)
-medianoftotalsteps<-median(totalstepsbyday$sum, na.rm=T)
+medianoftotalstepsbyday<-median(totalstepsbyday$sum, na.rm=T)
 meanoftotalstepsbyday
-medianoftotalsteps
+medianoftotalstepsbyday
 ```
 The mean, accross all days, of the total number per day is `r meanoftotalstepsbyday` and the median total number per day is `r medianoftotalstepsbyday`.  They are only 1 step per day different from each other, indicating hardly any skew in the data.
 
@@ -153,15 +153,17 @@ tail(incompleterows)
 We choose to replace NA with mean for corresponding 5-minute interval  
 
 ## 3 Create new dataset with missing data filled in.
+```{r}
 actimputed<-transform(act, imputedsteps=ifelse(is.na(steps), ave(steps,interval, FUN=function(x) mean(x, na.rm=T)),steps))
 actimputed<-tbl_df(actimputed)
 View(actimputed)
-
-# actimputed<-act %>% group_by(interval) %>% mutate(imputed=replace(steps, is.na(steps), mean(steps, rm.na=T)))  # why does this not work ???
+```
+### why does this not work ???
+actimputed<-act %>% group_by(interval) %>% mutate(imputed=replace(steps, is.na(steps), mean(steps, rm.na=T)))  
 
 
 ## 4 Make histogram with total nr of steps per day. Calculate mean and median total steps per day. Do they differ from part B (without imputing missing values). What is impact of imputing missing data on the estimates?
-
+```{r}
 totalimputedstepsbyday<-actimputed %>% group_by(date) %>% summarize(sum=sum(imputedsteps))
 totalimputedstepsbyday
 
@@ -169,15 +171,17 @@ sumimputedsteps<-totalimputedstepsbyday$sum
 sumimputedsteps
 
 hist(sumimputedsteps, col="red", main="Histogram of steps, with imputation, per day", ylab="Frequency", xlab="Number of steps per day", breaks=20)
+```
 
 # save figure
+```{r}
 png(file="histogram of total imputed steps by day.png")
 hist(sumimputedsteps, col="red", main="Histogram of steps, with imputation, per day", ylab="Frequency", xlab="Number of steps per day", breaks=20)
 dev.off()
-
+```
 # E Are there differences in activity patterns between weekdays and weekends?
 
-Yes, they are different. This illustrates impact of imputation (and the method of imputation), which is important to be aware of.
+They, they are different in that the one with imputed values has higher counts (peak above 15 when imputing NA values). However, the form of the histogram is not different, indicating that the NA's do not introduce important bias in this case.
 
 ## 1 Create factor 'part of week' (weekday or weekend)
 ## 2 Make panel plot of time series with average number of steps per 5-min interval, averaged across all weekdays OR weekenddays.
