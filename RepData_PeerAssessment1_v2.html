@@ -65,7 +65,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <h1>A Loading and preprocessing the data</h1>
 <div id="prepare-read-and-inspect" class="section level2">
 <h2>1 Prepare, read and inspect</h2>
-<p>Packages , eval=F</p>
+<p>Packages</p>
 <pre class="r"><code>ip &lt;- as.data.frame(installed.packages()[,c(1,3:4)])
 rownames(ip) &lt;- NULL
 ip &lt;- ip[is.na(ip$Priority),1:2,drop=FALSE]
@@ -348,6 +348,7 @@ print(ip, row.names=FALSE)</code></pre>
 ##                yaml     2.1.13
 ##                 zoo     1.7-11
 ##        translations      3.1.2</code></pre>
+<pre class="r"><code>library(dplyr)</code></pre>
 <pre><code>## 
 ## Attaching package: 'dplyr'
 ## 
@@ -378,7 +379,7 @@ print(ip, row.names=FALSE)</code></pre>
 ## [14] &quot;RepData_PeerAssessment1_v2.Rmd&quot;             
 ## [15] &quot;testplot.png&quot;</code></pre>
 <pre class="r"><code>ls()</code></pre>
-<pre><code>## [1] &quot;ip&quot;</code></pre>
+<pre><code>## [1] &quot;act&quot;             &quot;ip&quot;              &quot;sum&quot;             &quot;totalstepsbyday&quot;</code></pre>
 <p>Data</p>
 <pre class="r"><code>act&lt;-read.csv(&quot;activity.csv&quot;)
 head(act)</code></pre>
