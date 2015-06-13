@@ -8,10 +8,6 @@ output: html_document
 REPRODUCIBLE RESEARCH, PROJECT 1 - DAILY ACTIVITY MEASUREMENTS
 ===============================================================
 
-## FIRST CLONE REPO FROM PENG
-## this should create figures directory where figures should be placed in (automatically?)
-## need to place Rmd in directory and then knit Rmd to get other files
-
 # A Loading and preprocessing the data
 
 ## 1 Prepare, read and inspect
